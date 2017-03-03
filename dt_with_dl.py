@@ -19,7 +19,7 @@ def load_data():
         # Erstellen einer Zufallskarte
         x_train_sample = np.random.randint(2, size=(11, 11))
         y_train_sample = ndimage.distance_transform_edt(x_train_sample)
-        y_train_sample = 1
+        y_train_sample = x_train_sample.mean()
 
         #show_array(x_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
         #show_array(y_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
@@ -56,7 +56,7 @@ def create_net():
         # layer parameters:
         input_shape=(None, 1, PATCHSIZE, PATCHSIZE),
 
-        hidden1_num_units=100,  # number of units in 'hidden' layer
+        hidden1_num_units=121,  # number of units in 'hidden' layer
         #hidden2_num_units=5,  # number of units in 'hidden' layer
         #hidden3_num_units=5,  # number of units in 'hidden' layer
         #hidden4_num_units=5,  # number of units in 'hidden' layer
@@ -70,7 +70,7 @@ def create_net():
         update_momentum=0.9,
 
         regression=True,
-        max_epochs=20,
+        max_epochs=1000,
         verbose=1,
     )
     return net1
@@ -88,8 +88,8 @@ def main():
     net1.fit(x_train, y_train)
 
     # Show the result that we want and the result that we get
-    #show_array(y_test[0].reshape((PATCHSIZE, PATCHSIZE)))
-    #show_array(net1.predict(x_test[0,0]).reshape((PATCHSIZE, PATCHSIZE)))
+    show_array(x_test[0].reshape((PATCHSIZE, PATCHSIZE)))
+    #show_array(net1.predict(x_test[0]).reshape((PATCHSIZE, PATCHSIZE)))
 
     # Try the network on new data
     print("Label:\n%s" % str(y_test))
