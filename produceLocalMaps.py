@@ -6,6 +6,8 @@ import numpy as np
 import sys
 #import theano
 import pickle
+from scipy import ndimage
+import matplotlib.pyplot as plt
 
 # set global variables
 inputImage='fr79_better_training_map.png'
