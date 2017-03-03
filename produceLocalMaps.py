@@ -56,6 +56,13 @@ def create_pkl_file(train_x, train_y, test_x, test_y, filename='autoencoder.pkl'
     pickle.dump(data_set, f, protocol=2)
     f.close()
 
+def create_dt(pixelarray):
+    overall = np.zeros((im_width, im_height), dtype=np.uint8) # create empty array
+    for i in range(0, im_width, 1):
+        for j in range(0, im_height, 1):
+            overall[i][j] = 1 - np.array_equal(pixelarray[i, j],[0,0,0])
+    return ndimage.distance_transform_edt(overall) # DT
+
 # Matlab
 #for i=1:step_width:(size(mapImage, 2))
 #    for j=1:step_height:(size(mapImage, 1))
