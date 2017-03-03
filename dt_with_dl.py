@@ -91,7 +91,7 @@ def main():
 
     # Show the result that we want and the result that we get
     #show_array(y_test[0].reshape((PATCHSIZE, PATCHSIZE)))
-    show_array(net1.predict(x_test)[elem].reshape((PATCHSIZE, PATCHSIZE)))
+    show_array(net1.predict(x_test)[0].reshape((PATCHSIZE, PATCHSIZE)))
 
     # Try the network on new data
     #print("Label:\n%s" % str(y_test[:5]))
