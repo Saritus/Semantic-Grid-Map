@@ -15,11 +15,10 @@ def load_data():
     x_train = []
     y_train = []
 
-    for x in np.arange(0, 20):
+    for x in np.arange(0, 10):
         # Erstellen einer Zufallskarte
-        x_train_sample = np.random.randint(2, size=(11, 11))
+        x_train_sample = np.random.choice([0, 1], size=(11,11), p=[1./5, 4./5])
         y_train_sample = ndimage.distance_transform_edt(x_train_sample)
-        y_train_sample = x_train_sample.mean()
 
         #show_array(x_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
         #show_array(y_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
@@ -30,6 +29,9 @@ def load_data():
     # Umwandeln der beiden Arrays in numpy-Arrays
     x_train = np.array(x_train, dtype=np.float32)
     y_train = np.array(y_train, dtype=np.float32)
+
+    y_train = y_train.reshape(-1, PATCHSIZE*PATCHSIZE)
+    print y_train.shape
 
     x_valid = x_train
     y_valid = y_train
@@ -48,8 +50,8 @@ def create_net():
     net1 = NeuralNet(
         layers=[('input', layers.InputLayer),
                 ('hidden1', layers.DenseLayer),
-                #('hidden2', layers.DenseLayer),
-                #('hidden3', layers.DenseLayer),
+                ('hidden2', layers.DenseLayer),
+                ('hidden3', layers.DenseLayer),
                 #('hidden4', layers.DenseLayer),
                 ('output', layers.DenseLayer),
                 ],
@@ -57,12 +59,12 @@ def create_net():
         input_shape=(None, 1, PATCHSIZE, PATCHSIZE),
 
         hidden1_num_units=121,  # number of units in 'hidden' layer
-        #hidden2_num_units=5,  # number of units in 'hidden' layer
-        #hidden3_num_units=5,  # number of units in 'hidden' layer
+        hidden2_num_units=121,  # number of units in 'hidden' layer
+        hidden3_num_units=121,  # number of units in 'hidden' layer
         #hidden4_num_units=5,  # number of units in 'hidden' layer
 
-        output_num_units = 1,#PATCHSIZE*PATCHSIZE,
-        output_nonlinearity = lasagne.nonlinearities.sigmoid,
+        output_num_units = PATCHSIZE*PATCHSIZE,
+        output_nonlinearity = lasagne.nonlinearities.identity,
 
         # optimization method:
         update=nesterov_momentum,
@@ -88,12 +90,12 @@ def main():
     net1.fit(x_train, y_train)
 
     # Show the result that we want and the result that we get
-    show_array(x_test[0].reshape((PATCHSIZE, PATCHSIZE)))
-    #show_array(net1.predict(x_test[0]).reshape((PATCHSIZE, PATCHSIZE)))
+    #show_array(y_test[0].reshape((PATCHSIZE, PATCHSIZE)))
+    show_array(net1.predict(x_test)[elem].reshape((PATCHSIZE, PATCHSIZE)))
 
     # Try the network on new data
-    print("Label:\n%s" % str(y_test))
-    print("Predicted:\n%s" % str(net1.predict(x_test)))
+    #print("Label:\n%s" % str(y_test[:5]))
+    #print("Predicted:\n%s" % str(net1.predict(x_test[:5])))
 
 if __name__ == '__main__':
     main()
