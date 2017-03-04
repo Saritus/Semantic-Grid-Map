@@ -4,20 +4,22 @@ import lasagne
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
 from nolearn.lasagne import NeuralNet
+from nolearn.lasagne.visualize import plot_conv_weights
 
 import matplotlib.pyplot as pyplot
 import numpy as np
 from scipy import ndimage
+from PIL import Image
 
-PATCHSIZE = 11
+PATCHSIZE = 51
 
 def load_data():
     x_train = []
     y_train = []
 
-    for x in np.arange(0, 10):
+    for x in np.arange(0, 1000):
         # Erstellen einer Zufallskarte
-        x_train_sample = np.random.choice([0, 1], size=(11,11), p=[1./5, 4./5])
+        x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.01, 0.99])
         y_train_sample = ndimage.distance_transform_edt(x_train_sample)
 
         #show_array(x_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
@@ -46,9 +48,17 @@ def show_array(array):
     pyplot.show()
 
 
+def save_array(array, filename, folder=""):
+    imagearray = array - array.min()
+    imagearray = imagearray / imagearray.max() * 256
+    image = Image.fromarray(imagearray).convert('RGB')
+    image.save(folder + "/" + filename + ".tif")
+
+
 def create_net():
     net1 = NeuralNet(
         layers=[('input', layers.InputLayer),
+                #('conv2d1', layers.Conv2DLayer),
                 ('hidden1', layers.DenseLayer),
                 ('hidden2', layers.DenseLayer),
                 ('hidden3', layers.DenseLayer),
@@ -57,6 +67,11 @@ def create_net():
                 ],
         # layer parameters:
         input_shape=(None, 1, PATCHSIZE, PATCHSIZE),
+
+        #conv2d1_num_filters=64,
+        #conv2d1_filter_size=(7, 7),
+        #conv2d1_nonlinearity=lasagne.nonlinearities.identity,
+        #conv2d1_W=lasagne.init.GlorotUniform(),
 
         hidden1_num_units=121,  # number of units in 'hidden' layer
         hidden2_num_units=121,  # number of units in 'hidden' layer
@@ -69,7 +84,7 @@ def create_net():
         # optimization method:
         update=nesterov_momentum,
         update_learning_rate=0.01,
-        update_momentum=0.9,
+        update_momentum=0.95,
 
         regression=True,
         max_epochs=1000,
@@ -90,8 +105,14 @@ def main():
     net1.fit(x_train, y_train)
 
     # Show the result that we want and the result that we get
-    #show_array(y_test[0].reshape((PATCHSIZE, PATCHSIZE)))
-    show_array(net1.predict(x_test)[0].reshape((PATCHSIZE, PATCHSIZE)))
+    for x in np.arange(0, 100):
+        save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", "dt_ae")
+        save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", "dt_ae")
+
+    #plot_conv_weights(net1.layers_['conv2d1'], figsize=(7, 7))
+    #pyplot.show()
+
+    #print net1.score(x_test, y_test)
 
     # Try the network on new data
     #print("Label:\n%s" % str(y_test[:5]))
