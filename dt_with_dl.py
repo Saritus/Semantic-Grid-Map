@@ -50,9 +50,14 @@ def show_array(array, filename="", folder=""):
 
 
 def save_array(array, filename, folder=""):
-    imagearray = array - array.min()
-    imagearray = imagearray / imagearray.max() * 256
-    image = Image.fromarray(imagearray).convert('RGB')
+    # Normalize image to [0,255]
+    #imagearray = array - array.min()
+    #imagearray = imagearray / imagearray.max() * 255
+    imagearray = array# - array.min()
+    imagearray = imagearray / imagearray.max() * 255
+
+    
+    image = Image.fromarray(imagearray).convert('RGB').resize((500,500), Image.NEAREST)
     image.save(folder + "/" + filename + ".tif")
 
 
