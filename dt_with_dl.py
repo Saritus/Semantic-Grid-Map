@@ -11,7 +11,7 @@ import numpy as np
 from scipy import ndimage
 from PIL import Image
 
-PATCHSIZE = 5
+PATCHSIZE = 10
 FOLDER = "dt"
 
 def load_data():
@@ -20,7 +20,7 @@ def load_data():
 
     for x in np.arange(0, 20):
         # Erstellen einer Zufallskarte
-        x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.50, 0.50])
+        x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.10, 0.90])
         y_train_sample = ndimage.distance_transform_edt(x_train_sample)
         #y_train_sample = x_train_sample
 
@@ -67,7 +67,7 @@ def create_net():
         layers=[('input', layers.InputLayer),
                 #('conv2d1', layers.Conv2DLayer),
                 ('hidden1', layers.DenseLayer),
-                #('hidden2', layers.DenseLayer),
+                ('hidden2', layers.DenseLayer),
                 #('hidden3', layers.DenseLayer),
                 #('hidden4', layers.DenseLayer),
                 ('output', layers.DenseLayer),
@@ -80,8 +80,8 @@ def create_net():
         #conv2d1_nonlinearity=lasagne.nonlinearities.identity,
         #conv2d1_W=lasagne.init.GlorotUniform(),
 
-        hidden1_num_units=PATCHSIZE*PATCHSIZE*4,  # number of units in 'hidden' layer
-        #hidden2_num_units=121,  # number of units in 'hidden' layer
+        hidden1_num_units=PATCHSIZE*PATCHSIZE*2,  # number of units in 'hidden' layer
+        hidden2_num_units=PATCHSIZE*PATCHSIZE*2,  # number of units in 'hidden' layer
         #hidden3_num_units=121,  # number of units in 'hidden' layer
         #hidden4_num_units=5,  # number of units in 'hidden' layer
 
@@ -94,7 +94,7 @@ def create_net():
         update_momentum=0.5,
 
         regression=True,
-        max_epochs=20,
+        max_epochs=10,
         verbose=1,
     )
     return net1
@@ -111,10 +111,11 @@ def main():
     scores = []
 
     # Train the network
-    for i in np.arange(0, 100):
+    for i in np.arange(0, 50):
         net1.fit(x_train, y_train)
-
-        scores.extend([net1.score(x_test, y_test)])
+        current_score = net1.score(x_test, y_test)
+        print current_score
+        scores.extend([current_score])
     print scores
 
     # Show the result that we want and the result that we get
