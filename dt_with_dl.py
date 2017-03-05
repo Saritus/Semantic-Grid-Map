@@ -18,10 +18,11 @@ def load_data():
     x_train = []
     y_train = []
 
-    for x in np.arange(0, 1000):
+    for x in np.arange(0, 20):
         # Erstellen einer Zufallskarte
-        x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.01, 0.99])
+        x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.50, 0.50])
         y_train_sample = ndimage.distance_transform_edt(x_train_sample)
+        #y_train_sample = x_train_sample
 
         #show_array(x_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
         #show_array(y_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
@@ -66,8 +67,8 @@ def create_net():
         layers=[('input', layers.InputLayer),
                 #('conv2d1', layers.Conv2DLayer),
                 ('hidden1', layers.DenseLayer),
-                ('hidden2', layers.DenseLayer),
-                ('hidden3', layers.DenseLayer),
+                #('hidden2', layers.DenseLayer),
+                #('hidden3', layers.DenseLayer),
                 #('hidden4', layers.DenseLayer),
                 ('output', layers.DenseLayer),
                 ],
@@ -79,9 +80,9 @@ def create_net():
         #conv2d1_nonlinearity=lasagne.nonlinearities.identity,
         #conv2d1_W=lasagne.init.GlorotUniform(),
 
-        hidden1_num_units=121,  # number of units in 'hidden' layer
-        hidden2_num_units=121,  # number of units in 'hidden' layer
-        hidden3_num_units=121,  # number of units in 'hidden' layer
+        hidden1_num_units=PATCHSIZE*PATCHSIZE*4,  # number of units in 'hidden' layer
+        #hidden2_num_units=121,  # number of units in 'hidden' layer
+        #hidden3_num_units=121,  # number of units in 'hidden' layer
         #hidden4_num_units=5,  # number of units in 'hidden' layer
 
         output_num_units = PATCHSIZE*PATCHSIZE,
@@ -90,10 +91,10 @@ def create_net():
         # optimization method:
         update=nesterov_momentum,
         update_learning_rate=0.01,
-        update_momentum=0.95,
+        update_momentum=0.5,
 
         regression=True,
-        max_epochs=1000,
+        max_epochs=20,
         verbose=1,
     )
     return net1
@@ -124,11 +125,10 @@ def main():
     #plot_conv_weights(net1.layers_['conv2d1'], figsize=(7, 7))
     #pyplot.show()
 
-    #print net1.score(x_test, y_test)
-
     # Try the network on new data
     #print("Label:\n%s" % str(y_test[:5]))
     #print("Predicted:\n%s" % str(net1.predict(x_test[:5])))
+
 
 if __name__ == '__main__':
     main()
