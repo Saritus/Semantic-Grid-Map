@@ -44,7 +44,7 @@ def load_data():
     return x_train, y_train, x_valid, y_valid, x_test, y_test
 
 
-def show_array(array):
+def show_array(array, filename="", folder=""):
     pyplot.imshow(array)
     pyplot.show()
 
