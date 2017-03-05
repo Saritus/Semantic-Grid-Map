@@ -11,7 +11,8 @@ import numpy as np
 from scipy import ndimage
 from PIL import Image
 
-PATCHSIZE = 51
+PATCHSIZE = 5
+FOLDER = "dt"
 
 def load_data():
     x_train = []
@@ -105,9 +106,9 @@ def main():
     net1.fit(x_train, y_train)
 
     # Show the result that we want and the result that we get
-    for x in np.arange(0, 100):
-        save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", "dt_ae")
-        save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", "dt_ae")
+    for x in np.arange(0, 20):
+        save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
+        save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
 
     #plot_conv_weights(net1.layers_['conv2d1'], figsize=(7, 7))
     #pyplot.show()
