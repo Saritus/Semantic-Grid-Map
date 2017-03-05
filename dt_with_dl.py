@@ -102,8 +102,14 @@ def main():
     # Create the net
     net1 = create_net()
 
+    scores = []
+
     # Train the network
-    net1.fit(x_train, y_train)
+    for i in np.arange(0, 100):
+        net1.fit(x_train, y_train)
+
+        scores.extend([net1.score(x_test, y_test)])
+    print scores
 
     # Show the result that we want and the result that we get
     for x in np.arange(0, 20):
