@@ -112,6 +112,7 @@ def main():
 
     # Train the network
     for i in np.arange(0, 50):
+        x_train, y_train, x_valid, y_valid, x_test, y_test = load_data()
         net1.fit(x_train, y_train)
         current_score = net1.score(x_test, y_test)
         print current_score
