@@ -143,7 +143,8 @@ def main():
         for x in np.arange(0, 10):
             save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
             save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
-
+            save_denselayer(net1, "hidden1", "tif", 500, 500)
+            
     print scores
 
     #plot_conv_weights(net1.layers_['conv2d1'], figsize=(7, 7))
