@@ -62,6 +62,26 @@ def save_array(array, filename, folder=""):
     image.save(folder + "/" + filename + ".tif")
 
 
+def save_denselayer(net1, layername, filetype="tif", width=110, height=110):
+    layer0_values = layers.get_all_param_values(net1.layers_[layername])
+    for neuro in range(0, layer0_values[0].shape[1]):
+        layer0_1 = [layer0_values[0][i][neuro] for i in range(len(layer0_values[0]))]
+        if filetype != "tif":
+            layer0_1 = [i * 256 for i in layer0_1]
+        layer0_1 = np.asarray(layer0_1)
+        layer0_1 = layer0_1.reshape(
+            PATCHSIZE,  # first image dimension (vertical)
+            PATCHSIZE  # second image dimension (horizontal)
+        )
+        image = Image.fromarray(layer0_1)
+        if filetype == "tif":
+            image.resize((500, 500), Image.NEAREST).save(FOLDER + "/" + layername + str(neuro).zfill(4) + '.tif', "TIFF")
+        elif filetype == "png":
+            image.convert('RGB').resize((500, 500), Image.NEAREST).save(FOLDER + "/" + str(neuro).zfill(4) + '.png', "PNG")
+        else:
+            sys.stderr.write('Filetype is not supported')
+
+
 def create_net():
     net1 = NeuralNet(
         layers=[('input', layers.InputLayer),
