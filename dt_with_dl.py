@@ -117,12 +117,14 @@ def main():
         current_score = net1.score(x_test, y_test)
         print current_score
         scores.extend([current_score])
-    print scores
+    
 
     # Show the result that we want and the result that we get
-    for x in np.arange(0, 20):
-        save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
-        save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
+        for x in np.arange(0, 10):
+            save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
+            save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
+
+    print scores
 
     #plot_conv_weights(net1.layers_['conv2d1'], figsize=(7, 7))
     #pyplot.show()
