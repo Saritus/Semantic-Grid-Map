@@ -12,17 +12,17 @@ from scipy import ndimage
 from PIL import Image
 
 PATCHSIZE = 10
-FOLDER = "dt"
+FOLDER = "autoencoder2"
 
 def load_data():
     x_train = []
     y_train = []
 
-    for x in np.arange(0, 20):
+    for x in np.arange(0, 10):
         # Erstellen einer Zufallskarte
-        x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.10, 0.90])
+        x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.50, 0.50])
         y_train_sample = ndimage.distance_transform_edt(x_train_sample)
-        #y_train_sample = x_train_sample
+        y_train_sample = x_train_sample
 
         #show_array(x_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
         #show_array(y_train_sample.reshape((PATCHSIZE, PATCHSIZE)))
@@ -35,7 +35,7 @@ def load_data():
     y_train = np.array(y_train, dtype=np.float32)
 
     y_train = y_train.reshape(-1, PATCHSIZE*PATCHSIZE)
-    print y_train.shape
+    #print y_train.shape
 
     x_valid = x_train
     y_valid = y_train
@@ -111,7 +111,7 @@ def main():
     scores = []
 
     # Train the network
-    for i in np.arange(0, 50):
+    for i in np.arange(0, 200):
         x_train, y_train, x_valid, y_valid, x_test, y_test = load_data()
         net1.fit(x_train, y_train)
         current_score = net1.score(x_test, y_test)
