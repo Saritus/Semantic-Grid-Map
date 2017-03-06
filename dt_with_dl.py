@@ -130,21 +130,24 @@ def main():
     net1 = create_net()
 
     scores = []
+    net1.fit(x_train, y_train)
 
     # Train the network
-    for i in np.arange(0, 200):
+    for i in np.arange(0, 5000):
         x_train, y_train, x_valid, y_valid, x_test, y_test = load_data()
-        net1.fit(x_train, y_train)
+
         current_score = net1.score(x_test, y_test)
         print current_score
         scores.extend([current_score])
+        
+        net1.fit(x_train, y_train)
     
-
+        if(i%10 is 0):
     # Show the result that we want and the result that we get
-        for x in np.arange(0, 10):
-            save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
-            save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
-            save_denselayer(net1, "hidden1", "tif", 500, 500)
+            for x in np.arange(0, SETS):
+                save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
+                save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
+                save_denselayer(net1, "hidden1", "tif", 500, 500)
             
     print scores
 
