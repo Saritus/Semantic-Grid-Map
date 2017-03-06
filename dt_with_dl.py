@@ -13,12 +13,13 @@ from PIL import Image
 
 PATCHSIZE = 10
 FOLDER = "autoencoder2"
+SETS = 500
 
 def load_data():
     x_train = []
     y_train = []
 
-    for x in np.arange(0, 10):
+    for x in np.arange(0, SETS):
         # Erstellen einer Zufallskarte
         x_train_sample = np.random.choice([0, 1], size=(PATCHSIZE,PATCHSIZE), p=[0.50, 0.50])
         y_train_sample = ndimage.distance_transform_edt(x_train_sample)
