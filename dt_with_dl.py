@@ -11,9 +11,9 @@ import numpy as np
 from scipy import ndimage
 from PIL import Image
 
-PATCHSIZE = 10
-FOLDER = "autoencoder2"
-SETS = 500
+PATCHSIZE = 4
+FOLDER = "autoencoder4"
+SETS = 65536/64
 
 def load_data():
     x_train = []
@@ -88,7 +88,7 @@ def create_net():
         layers=[('input', layers.InputLayer),
                 #('conv2d1', layers.Conv2DLayer),
                 ('hidden1', layers.DenseLayer),
-                ('hidden2', layers.DenseLayer),
+                #('hidden2', layers.DenseLayer),
                 #('hidden3', layers.DenseLayer),
                 #('hidden4', layers.DenseLayer),
                 ('output', layers.DenseLayer),
@@ -101,8 +101,8 @@ def create_net():
         #conv2d1_nonlinearity=lasagne.nonlinearities.identity,
         #conv2d1_W=lasagne.init.GlorotUniform(),
 
-        hidden1_num_units=PATCHSIZE*PATCHSIZE*2,  # number of units in 'hidden' layer
-        hidden2_num_units=PATCHSIZE*PATCHSIZE*2,  # number of units in 'hidden' layer
+        hidden1_num_units=PATCHSIZE*PATCHSIZE,  # number of units in 'hidden' layer
+        #hidden2_num_units=PATCHSIZE*PATCHSIZE*2,  # number of units in 'hidden' layer
         #hidden3_num_units=121,  # number of units in 'hidden' layer
         #hidden4_num_units=5,  # number of units in 'hidden' layer
 
@@ -115,7 +115,7 @@ def create_net():
         update_momentum=0.5,
 
         regression=True,
-        max_epochs=10,
+        max_epochs=1,
         verbose=1,
     )
     return net1
@@ -136,18 +136,18 @@ def main():
     for i in np.arange(0, 5000):
         x_train, y_train, x_valid, y_valid, x_test, y_test = load_data()
 
-        current_score = net1.score(x_test, y_test)
-        print current_score
-        scores.extend([current_score])
+        #current_score = net1.score(x_test, y_test)
+        #print current_score
+        #scores.extend([current_score])
         
         net1.fit(x_train, y_train)
     
-        if(i%10 is 0):
+        #if(i%2 is 0):
     # Show the result that we want and the result that we get
-            for x in np.arange(0, SETS):
-                save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
-                save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
-                save_denselayer(net1, "hidden1", "tif", 500, 500)
+            #for x in np.arange(0, SETS):
+                #save_array(y_test[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_t", FOLDER)
+                #save_array(net1.predict(x_test)[x].reshape((PATCHSIZE, PATCHSIZE)), str(x).zfill(4)+"_y", FOLDER)
+        save_denselayer(net1, "hidden1", "tif", 500, 500)
             
     print scores
 
