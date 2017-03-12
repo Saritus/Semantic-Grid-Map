@@ -2,6 +2,19 @@
 
 import lasagne
 from lasagne import layers
+from lasagne.layers import get_output, InputLayer, DenseLayer, Upscale2DLayer, ReshapeLayer
+
+from lasagne.layers import Conv2DLayer as Conv2DLayerSlow
+from lasagne.layers import MaxPool2DLayer as MaxPool2DLayerSlow
+try:
+    from lasagne.layers.cuda_convnet import Conv2DCCLayer as Conv2DLayerFast
+    from lasagne.layers.cuda_convnet import MaxPool2DCCLayer as MaxPool2DLayerFast
+    print('Using cuda_convnet (faster)')
+except ImportError:
+    from lasagne.layers import Conv2DLayer as Conv2DLayerFast
+    from lasagne.layers import MaxPool2DLayer as MaxPool2DLayerFast
+    print('Using lasagne.layers (slower)')
+
 from lasagne.updates import nesterov_momentum
 from nolearn.lasagne import NeuralNet
 from nolearn.lasagne.visualize import plot_conv_weights
