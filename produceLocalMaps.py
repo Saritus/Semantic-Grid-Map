@@ -87,10 +87,10 @@ train_set_y = []
 test_set_x = []
 test_set_y = []
 for x in range(0, im_width, step_width):
-    if ((im_width-x) < width):
+    if (im_width-x) < width:
         break
     for y in range(0, im_height, step_height):
-        if ((im_height-y) < height):
+        if (im_height-y) < height:
             break
         localMapBW = np.zeros((height/innerstep+1, width/innerstep+1), dtype=np.uint8)
         localMapCol = np.zeros((height/innerstep+1, width/innerstep+1, 3), dtype=np.uint8)
