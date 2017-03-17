@@ -39,7 +39,7 @@ def get_color_code(pixel):
         if np.array_equal(pixel, color_table[index]):
             return index
     color_table.append(pixel)
-    sys.stderr.write("color is not in color_table\n")
+    sys.stderr.write("color_table" + str(color_table) + "\n")
     #print (color_table)
     #print ((color_table)-1)
     return len(color_table)-1
