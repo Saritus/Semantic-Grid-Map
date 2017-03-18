@@ -110,6 +110,10 @@ def show_image(x, width=11, height=11):
 
 
 def label_to_color(array, color_table):
+    print "color table"
+    print color_table[0]
+    print color_table[1]
+    print len(color_table)
     imagearray = []
     for i in range(len(array)):
         imagearray.append(color_table[array[i]])
